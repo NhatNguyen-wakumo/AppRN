@@ -1,13 +1,21 @@
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { Component } from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import LoginTab from "./LoginTab";
 import SignupTab from "./SignupTab";
+import AccountTab from "./AccountTab";
+import UpdateTab from "./UpdateTab";
+import FriendTab from "./FriendTab";
+import ChatTab from "./ChatTab";
 
 const AppNavigator = createStackNavigator({
   Login: LoginTab,
-  Signup: SignupTab
+  Signup: SignupTab,
+  Account: AccountTab,
+  Update: UpdateTab,
+  Friend: FriendTab,
+  Chat: ChatTab
 });
 
 const MainNavigator = createAppContainer(AppNavigator);
