@@ -5,7 +5,8 @@ import {
   View,
   Platform,
   AppRegistry,
-  Button
+  Button,
+  AsyncStorage
 } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from "react-native-firebase";
@@ -18,7 +19,7 @@ import {
 export default class SignupTab extends Component {
   constructor(props) {
     super(props);
-    this.unsubcriber = null;
+    this.unsubscriber = null;
     this.state = {
       users: [],
       newUserName: "",
@@ -27,27 +28,11 @@ export default class SignupTab extends Component {
       newUserEmail: "",
       newUserPassword: "",
       loading: false,
-      user: null
+      user: null,
+      typedEmail: "",
+      typedPassword: ""
     };
     console.log(firebase.auth());
-    this.iosConfig = {
-      clientId:
-        "377234939500-bea9c5sovr8b5poqi471f2i1s22u3dhl.apps.googleusercontent.com",
-      appId: "1:377234939500:ios:8212c3f2fc453646",
-      apiKey: "AIzaSyDqlgP9SJSrR83fuehoL51oMd9YRPbJI-8",
-      databaseURL: "https://realappwkm.firebaseio.com",
-      storageBucket: "realappwkm.appspot.com",
-      messagingSenderId: "377234939500",
-      projectId: "realappwkm",
-      persistance: true
-    };
-    this.androidConfig = {
-      persistance: true
-    };
-
-    this.userApp = firebase.initializeApp(
-      Platform.OS === "ios" ? this.iosConfig : this.androidConfig
-    );
 
     this.rootRef = firebase.database().ref();
     console.log(this.rootRef);
@@ -69,17 +54,27 @@ export default class SignupTab extends Component {
       firebase
         .auth()
         .createUserWithEmailAndPassword(
-          this.state.newUserEmail,
-          this.state.newUserPassword
+          this.state.typedEmail,
+          this.state.typedPassword
         )
         .then(loggedInUser => {
           this.setState({ user: loggedInUser });
+          console.log(`Register successfully`);
+          alert("Register successfully");
+        })
+        .then(() => {
+          this.props.navigation.navigate("Login");
+        })
+        .then(() => {
           console.log(
-            `Register with user: ${JSON.stringify(loggedInUser.toJSON())}`
+            `user name: ${this.state.newUserName},
+            user gender: ${this.state.newUserGender},
+            user age: ${this.state.newUserAge},
+            user email: ${this.state.newUserEmail}`
           );
         })
         .catch(error => {
-          console.log("Register fail");
+          console.log(`Register fail error: ${error}`);
         });
       this.userRef.push({
         userName: this.state.newUserName,
@@ -88,8 +83,6 @@ export default class SignupTab extends Component {
         userEmail: this.state.newUserEmail,
         userPassword: this.state.newUserPassword
       });
-
-      // this.props.navigation.navigate("Login");
     }
   };
 
@@ -153,7 +146,8 @@ export default class SignupTab extends Component {
               autoCapitalize="none"
               onChangeText={text => {
                 this.setState({
-                  newUserEmail: text
+                  newUserEmail: text,
+                  typedEmail: text
                 });
               }}
               value={this.state.newUserEmail}
@@ -169,7 +163,8 @@ export default class SignupTab extends Component {
               autoCapitalize="none"
               onChangeText={text => {
                 this.setState({
-                  newUserPassword: text
+                  newUserPassword: text,
+                  typedPassword: text
                 });
               }}
               value={this.state.newUserPassword}
