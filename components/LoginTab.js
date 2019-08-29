@@ -16,27 +16,17 @@ export default class LoginTab extends Component {
     super(props);
     this.unsubcriber = null;
     this.state = {
+      typedEmail: "",
+      typedPassword: "",
+      user: null,
+      users: [],
+      newUserName: "",
+      newUserAge: "",
+      newUserGender: "",
       newUserEmail: "",
       newUserPassword: "",
-      user: null
+      loading: false
     };
-    this.iosConfig = {
-      clientId:
-        "377234939500-bea9c5sovr8b5poqi471f2i1s22u3dhl.apps.googleusercontent.com",
-      appId: "1:377234939500:ios:8212c3f2fc453646",
-      apiKey: "AIzaSyDqlgP9SJSrR83fuehoL51oMd9YRPbJI-8",
-      databaseURL: "https://realappwkm.firebaseio.com",
-      storageBucket: "realappwkm.appspot.com",
-      messagingSenderId: "377234939500",
-      projectId: "realappwkm",
-      persistance: true
-    };
-    this.androidConfig = {
-      persistance: true
-    };
-    this.userApp = firebase.initializeApp(
-      Platform.OS === "ios" ? this.iosConfig : this.androiConfig
-    );
   }
 
   onLogin = () => {
@@ -47,10 +37,11 @@ export default class LoginTab extends Component {
         this.state.typedPassword
       )
       .then(loggedInUser => {
-        this.props.navigation.navigate("Account");
-        console.log(
-          `Register with user: ${JSON.stringify(loggedInUser.toJSON)}`
-        );
+        console.log(`Login successfully`);
+        alert("Login successfully");
+      })
+      .then(() => {
+        this.props.navigation.navigate("Join");
       })
       .catch(error => {
         alert("Register fail");
@@ -71,10 +62,10 @@ export default class LoginTab extends Component {
             autoCapitalize="none"
             onChangeText={text => {
               this.setState({
-                newUserEmail: text
+                typedEmail: text
               });
             }}
-            value={this.state.newUserEmail}
+            value={this.state.typedEmail}
           ></TextInput>
           <TextInput
             style={styles.inputs}
@@ -84,10 +75,10 @@ export default class LoginTab extends Component {
             autoCapitalize="none"
             onChangeText={text => {
               this.setState({
-                newUserPassword: text
+                typedPassword: text
               });
             }}
-            value={this.state.newUserPassword}
+            value={this.state.typedPassword}
           ></TextInput>
         </View>
         <View style={styles.containerDown}>
